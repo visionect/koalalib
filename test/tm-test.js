@@ -4,10 +4,9 @@ var assert = buster.assert,
 
 buster.testCase("TM test case", {
     setUp: function() {
-        if (!('KoalaRenderRectangles' in okular)) {
+        if(okular.fake) {
             okular.KoalaRenderRectangles = this.stub();
-        }
-        if(!okular.fake) {
+        } else {
             this.spy(okular, 'KoalaRenderRectangles');
         }
         okular.init({

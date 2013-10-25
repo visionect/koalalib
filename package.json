@@ -1,0 +1,16 @@
+{
+    "author" : "Visionect",
+    "name" : "koalalib",
+    "description" : "jQuery library that eases using Koala Okular.",
+    "version" : "3.0.0",
+    "scripts" : {
+        "test" : "node_modules/.bin/buster-test"
+    },
+    "devDependencies" : {
+        "buster" : "~0.7.7",
+        "phantomjs" : ">=1.0.0"
+    },
+    "engines" : {
+        "node" : "~0.10"
+    }
+}
