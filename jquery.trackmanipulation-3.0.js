@@ -55,6 +55,10 @@
             var koalaRectangles = [],
                 now = new Date(),
                 nextCallTimeout = this.settings.timeoutFirst,
+                bitDepth = 1,
+                A2 = false,
+                PIP = false,
+                inverse = false,
                 self = this;
 
             if (this.settings.debug) {
@@ -81,8 +85,24 @@
                     koalaRectangles.push(rectangle.top);
                     koalaRectangles.push(rectangle.width);
                     koalaRectangles.push(rectangle.height);
-                    koalaRectangles.push(rectangle.inverse << 6 | rectangle.PIP << 5 | rectangle.A2 << 4 | rectangle.bitDepth);
-                    koalaRectangles.push(rectangle.dithering);
+
+                    if (self.settings.newRectangleFormat) {
+                        koalaRectangles.push(rectangle.inverse << 6 | rectangle.PIP << 5 | rectangle.A2 << 4 | rectangle.bitDepth);
+                        koalaRectangles.push(rectangle.dithering);
+                    } else {
+                        if (rectangle.A2 && !A2) {
+                            A2 = true;
+                        }
+                        if (rectangle.PIP && !PIP) {
+                            PIP = true;
+                        }
+                        if (rectangle.inverse && !inverse) {
+                            inverse = true;
+                        }
+                        if (rectangle.bitDepth > bitDepth) {
+                            bitDepth = rectangle.bitDepth;
+                        }
+                    }
 
                     if (self.settings.debug) {
                         $('<div class="tmRectangle"></div>').css({
@@ -101,7 +121,20 @@
             });
 
             if('KoalaRenderRectangles' in okular) {
-                okular.KoalaRenderRectangles(koalaRectangles.length, koalaRectangles);
+                if (this.settings.newRectangleFormat) {
+                    okular.KoalaRenderRectangles(koalaRectangles.length, koalaRectangles);
+                } else {
+                    if (A2) {
+                        okular.KoalaUseA2Waveform();
+                    }
+                    if (PIP) {
+                        okular.KoalaUsePIPLayerOnce();
+                    }
+                    if (inverse) {
+                       okular.KoalaInverseNextRender();
+                    }
+                    okular.KoalaRender(koalaRectangles.length, koalaRectangles, bitDepth);
+                }
             }
 
             if (this.rectangles.length > 0) {
@@ -131,6 +164,7 @@
         debug: true,
         debugOffset: 10,
         position: 'right',
+        newRectangleFormat: false,
 
         bitDepth: 4,
         dithering: okular.dithering.default,

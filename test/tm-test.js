@@ -6,8 +6,16 @@ buster.testCase("TM test case", {
     setUp: function() {
         if(okular.fake) {
             okular.KoalaRenderRectangles = this.stub();
+            okular.KoalaRender = this.stub();
+            okular.KoalaInverseNextRender = this.stub();
+            okular.KoalaUseA2Waveform = this.stub();
+            okular.KoalaUsePIPLayerOnce = this.stub();
         } else {
             this.spy(okular, 'KoalaRenderRectangles');
+            this.spy(okular, 'KoalaRender');
+            this.spy(okular, 'KoalaInverseNextRender');
+            this.spy(okular, 'KoalaUseA2Waveform');
+            this.spy(okular, 'KoalaUsePIPLayerOnce');
         }
         okular.init({
             debug: true
@@ -33,7 +41,11 @@ buster.testCase("TM test case", {
         assert.equals(parseInt(overlay.css('left'), 10), 0);
         assert.equals(parseInt(overlay.css('top'), 10), okular.defaults.height+okular.defaults.debugOffset);
     },
-    "basic tmList": function() {
+    "basic tmList with new rectangle format": function() {
+        okular.init({
+            newRectangleFormat: true
+        });
+
         // should throw an exception without width and height properties.
         assert.exception(okular.add);
 
@@ -106,6 +118,82 @@ buster.testCase("TM test case", {
 
         this.clock.tick(okular.defaults.timeoutFirst);
         assert.equals(okular.KoalaRenderRectangles.getCall(3).args[1], [0, 0, 100, 100, 0x71, okular.defaults.dithering]);
+    },
+    "basic tmList with old rectangle format": function() {
+        okular.init({
+            newRectangleFormat: false
+        });
 
+        // should throw an exception without width and height properties.
+        assert.exception(okular.add);
+
+        okular.add({
+            width: 100,
+            height: 100,
+        });
+
+        okular.add({
+            width: 100,
+            height: 200,
+            top: 300,
+            left: 400,
+            renderDelay: 50
+        });
+
+        this.clock.tick(okular.defaults.timeoutFirst);
+        assert.calledOnceWith(okular.KoalaRender, 4, [0, 0, 100, 100], 4);
+
+        var overlays = $('.tmRectangle'),
+            overlay = $(overlays[0]);
+
+        assert.equals(overlays.length, 1);
+        assert.equals(overlay.width(), 100);
+        assert.equals(overlay.height(), 100);
+
+        setTimeout(function() {
+            okular.add({
+                width: 200,
+                height: 200,
+            });
+        }, 100);
+
+        this.clock.tick(okular.defaults.timeout4bit);
+        assert.equals(okular.KoalaRender.getCall(1).args[1], [400, 300, 100, 200, 0, 0, 200, 200]);
+        assert.equals(okular.KoalaRender.getCall(1).args[2], 4);
+
+        overlays = $('.tmRectangle');
+        overlay = $(overlays[0]);
+
+        assert.equals(overlays.length, 2);
+        assert.equals(overlay.width(), 100);
+        assert.equals(overlay.height(), 200);
+
+        overlay = $(overlays[1]);
+        assert.equals(overlay.width(), 200);
+        assert.equals(overlay.height(), 200);
+
+        okular.add({
+            width: 100,
+            height: 100,
+            bitDepth: 1,
+        });
+
+        refute.calledThrice(okular.KoalaRender);
+
+        this.clock.tick(okular.defaults.timeout4bit);
+        assert.calledThrice(okular.KoalaRender);
+
+        okular.add({
+            width: 100,
+            height: 100,
+            bitDepth: 1,
+            A2: true,
+            PIP: true,
+            inverse: true
+        });
+
+        this.clock.tick(okular.defaults.timeoutFirst);
+        assert.equals(okular.KoalaRender.getCall(3).args[1], [0, 0, 100, 100]);
+        assert.equals(okular.KoalaRender.getCall(3).args[2], 1);
     }
 });
