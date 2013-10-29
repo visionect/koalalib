@@ -17,9 +17,7 @@ buster.testCase("TM test case", {
             this.spy(okular, 'KoalaUseA2Waveform');
             this.spy(okular, 'KoalaUsePIPLayerOnce');
         }
-        okular.init({
-            debug: true
-        });
+        okular.init(okular.defaults);
         this.clock = buster.sinon.useFakeTimers();
     },
     tearDown: function() {
@@ -116,7 +114,7 @@ buster.testCase("TM test case", {
             inverse: true
         });
 
-        this.clock.tick(okular.defaults.timeoutFirst);
+        this.clock.tick(okular.defaults.timeout1bit);
         assert.equals(okular.KoalaRenderRectangles.getCall(3).args[1], [0, 0, 100, 100, 0x71, okular.defaults.dithering]);
     },
     "basic tmList with old rectangle format": function() {
@@ -184,7 +182,7 @@ buster.testCase("TM test case", {
         assert.calledThrice(okular.KoalaRender);
 
         okular.add({
-            width: 100,
+            width: 250,
             height: 100,
             bitDepth: 1,
             A2: true,
@@ -192,8 +190,18 @@ buster.testCase("TM test case", {
             inverse: true
         });
 
-        this.clock.tick(okular.defaults.timeoutFirst);
-        assert.equals(okular.KoalaRender.getCall(3).args[1], [0, 0, 100, 100]);
+        this.clock.tick(okular.defaults.timeout1bit);
+        assert.equals(okular.KoalaRender.getCall(3).args[1], [0, 0, 250, 100]);
         assert.equals(okular.KoalaRender.getCall(3).args[2], 1);
+    },
+    "rectangle discarding": function() {
+        okular.add({ width: 100, height: 100 });
+        okular.add({ width: 100, height: 100 });
+        okular.add({ width: 200, height: 100 });
+        okular.add({ width: 100, height: 100 });
+        okular.add({ width: 100, height: 100 });
+
+        this.clock.tick(okular.defaults.timeoutFirst);
+        assert.calledOnceWith(okular.KoalaRender, 8, [0, 0, 100, 100, 0, 0, 200, 100], 4);
     }
 });

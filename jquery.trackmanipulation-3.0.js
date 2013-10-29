@@ -4,14 +4,24 @@
         window.okular = {
             fake: true,
             KoalaNochange: function() {},
+            Beep: function() {},
+            BeepSoft: -1,
+            BeepHard: -1,
+            SetFrontligh: function() {},
+            nm_host: undefined,
+            device_uuid: undefined,
+            RSSI: -1,
+            BatteryLevel: -1,
+            ExternalBatteryLevel: -1,
+            Temperature: -1,
+            Charger: -1
         };
     }
 
     $.extend(window.okular, {
-        rectangles: [],
-        settings: {},
-
         init: function(options) {
+            this.rectangles = [];
+            this.nextUpdate = null;
             this.settings = $.extend({}, this.defaults, options);
             if (!okular.fake) {
                 this.settings.debug = false;
@@ -35,11 +45,31 @@
         add: function(options) {
             var rectangle = $.extend({}, this.defaultRectangleOptions, options);
             if ('width' in rectangle && 'height' in rectangle) {
-                rectangle.timestamp = new Date();
-                this.rectangles.push(rectangle);
+
                 
-                if (this.rectangles.length == 1) {
-                    window.setTimeout($.proxy(this.sendToKoala, this), this.settings.timeoutFirst);
+                var same = $.grep(this.rectangles, function(e) {
+                    return  e.width == rectangle.width &&
+                            e.height == rectangle.height &&
+                            e.bitDepth == rectangle.bitDepth &&
+                            e.A2 == rectangle.A2 &&
+                            e.inverse == rectangle.inverse &&
+                            e.dithering == rectangle.dithering &&
+                            e.renderDelay == rectangle.renderDelay &&
+                            e.top == rectangle.top &&
+                            e.left == rectangle.left;
+                });
+
+                if (same.length == 0) {
+                    rectangle.timestamp = new Date();
+                    this.rectangles.push(rectangle);
+                    
+                    if (this.rectangles.length == 1) {
+                        var timeout = this.nextUpdate ? this.nextUpdate - (new Date()) : this.settings.timeoutFirst;
+                        if (timeout < this.settings.timeoutFirst ) {
+                            timeout = this.settings.timeoutFirst;
+                        }
+                        window.setTimeout($.proxy(this.sendToKoala, this), timeout);
+                    }
                 }
 
                 if (okular.noChangeTimer) {
@@ -115,10 +145,15 @@
                             opacity: 0.4
                         }).appendTo('#tmOverlay');
                     }
-                
+                    
                     self.rectangles.splice(self.rectangles.indexOf(rectangle), 1);
                 }
             });
+
+            
+            if (this.settings.debug) {
+                console.log("Sending " + koalaRectangles.length/(self.settings.newRectangleFormat ? 6 : 4) + " changes to koala: [" + koalaRectangles.join(', ') + "]");
+            }
 
             if('KoalaRenderRectangles' in okular) {
                 if (this.settings.newRectangleFormat) {
@@ -148,6 +183,9 @@
                 }
                 setTimeout($.proxy(this.sendToKoala, this), nextCallTimeout);
             }
+
+            this.nextUpdate = new Date();
+            this.nextUpdate.setMilliseconds(this.nextUpdate.getMilliseconds() + nextCallTimeout);
         }
     });
 
