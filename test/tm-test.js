@@ -17,7 +17,7 @@ buster.testCase("TM test case", {
             this.spy(okular, 'KoalaUseA2Waveform');
             this.spy(okular, 'KoalaUsePIPLayerOnce');
         }
-        okular.init(okular.defaults);
+        okular.init();
         this.clock = buster.sinon.useFakeTimers();
     },
     tearDown: function() {
@@ -41,7 +41,8 @@ buster.testCase("TM test case", {
     },
     "basic tmList with new rectangle format": function() {
         okular.init({
-            newRectangleFormat: true
+            newRectangleFormat: true,
+            combineRectangles: false
         });
 
         // should throw an exception without width and height properties.
@@ -119,7 +120,8 @@ buster.testCase("TM test case", {
     },
     "basic tmList with old rectangle format": function() {
         okular.init({
-            newRectangleFormat: false
+            newRectangleFormat: false,
+            combineRectangles: false
         });
 
         // should throw an exception without width and height properties.
@@ -195,6 +197,10 @@ buster.testCase("TM test case", {
         assert.equals(okular.KoalaRender.getCall(3).args[2], 1);
     },
     "rectangle discarding": function() {
+        okular.init({
+            combineRectangles: false
+        });
+
         okular.add({ width: 100, height: 100 });
         okular.add({ width: 100, height: 100 });
         okular.add({ width: 200, height: 100 });
@@ -203,5 +209,13 @@ buster.testCase("TM test case", {
 
         this.clock.tick(okular.defaults.timeoutFirst);
         assert.calledOnceWith(okular.KoalaRender, 8, [0, 0, 100, 100, 0, 0, 200, 100], 4);
+    },
+    "rectangle combining": function() {
+        okular.add({ width: 100, height: 100, top: 10, left: 40, bitDepth: 1 });
+        okular.add({ width: 100, height: 100, top: 400, left: 200 });
+        okular.add({ width: 100, height: 100, top: 40, left: 60 });
+
+        this.clock.tick(okular.defaults.timeoutFirst);
+        assert.calledOnceWith(okular.KoalaRender, 4, [40, 10, 260, 490], 4);
     }
 });
