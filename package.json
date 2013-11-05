@@ -2,7 +2,7 @@
     "author" : "Visionect",
     "name" : "koalalib",
     "description" : "jQuery library that eases using Koala Okular.",
-    "version" : "3.10",
+    "version" : "3.10.0",
     "scripts" : {
         "test" : "node_modules/.bin/buster-test"
     },
