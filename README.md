@@ -22,7 +22,7 @@ Default settings:
 ```javascript
 okular.defaults = {
     width: 600, //width of device
-    height: 800, /height of device
+    height: 800, //height of device
     debug: true, //enable debug display and console output
     debugOffset: 10, //offset of debug display from main display (in px)
     position: 'right', //position of debug display ('right' or 'bottom')
