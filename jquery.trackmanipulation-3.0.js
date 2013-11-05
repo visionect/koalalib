@@ -102,9 +102,9 @@
             });
 
             // rectangles can be combined
-            if (combinable.length == currentRectangles.length) {
-                var rectangle = $.extend({}, this.defaultRectangleOptions, {right: 0, bottom: 0, left: 10000, top: 10000});
-                $.each(currentRectangles, function(index) {
+            if (combinable.length > 0) {
+                var rectangle = $.extend({}, this.defaultRectangleOptions, {right: 0, bottom: 0, left: 10000, top: 10000, bitDepth: 1});
+                $.each(combinable, function(index) {
                     rectangle.left = Math.min(rectangle.left, this.left);
                     rectangle.top = Math.min(rectangle.top, this.top);
 
@@ -118,13 +118,14 @@
                     rectangle.dithering = Math.max(rectangle.dithering, this.dithering);
 
                     self.rectangles.splice(self.rectangles.indexOf(this), 1);
+                    currentRectangles.splice(currentRectangles.indexOf(this), 1);
                 });
 
                 rectangle.width = rectangle.right-rectangle.left;
                 rectangle.height = rectangle.bottom-rectangle.top;
 
                 self.rectangles.push(rectangle);
-                currentRectangles = [rectangle];
+                currentRectangles.push(rectangle);
             }
 
             $.each(currentRectangles, function(index) {

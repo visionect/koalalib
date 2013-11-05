@@ -212,10 +212,11 @@ buster.testCase("TM test case", {
     },
     "rectangle combining": function() {
         okular.add({ width: 100, height: 100, top: 10, left: 40, bitDepth: 1 });
-        okular.add({ width: 100, height: 100, top: 400, left: 200 });
-        okular.add({ width: 100, height: 100, top: 40, left: 60 });
+        okular.add({ width: 100, height: 100, top: 400, left: 200, bitDepth: 1 });
+        okular.add({ width: 100, height: 100, top: 40, left: 60, bitDepth: 1 });
+        okular.add({ width: 50, height: 50, top: 200, left: 100, bitDepth: 4, combine: false });
 
         this.clock.tick(okular.defaults.timeoutFirst);
-        assert.calledOnceWith(okular.KoalaRender, 4, [40, 10, 260, 490], 4);
+        assert.calledOnceWith(okular.KoalaRender, 8, [100, 200, 50, 50, 40, 10, 260, 490], 4);
     }
 });
