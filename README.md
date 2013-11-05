@@ -7,7 +7,7 @@ Usage
 -----
 Include jQuery and jquery.trackmanipulation-3.10.js at the bottom of your HTML file, right befeor the end of `body` tag. And then you can use `okular.add(options)` and `$.fn.tmList(options)` in your code.
 
-```
+```html
 <script src="lib/jquery-2.0.3.js"></script>
 <script src="jquery.trackmanipulation-3.10.js"></script>
 ```
@@ -19,7 +19,7 @@ Call this function on page load with options object to override the default sett
 
 Default settings: 
 
-```
+```javascript
 okular.defaults = {
     width: 600, //width of device
     height: 800, /height of device
@@ -43,7 +43,7 @@ You can override any of the above options, but it is strongly recommended that y
 
 Example init call for horizontal display:
 
-```
+```javascript
 okular.init({
     width: 800,
     height: 600
@@ -56,7 +56,7 @@ Adds a new rectangle to queue. The only two required arguments are width and hei
 
 Default rectangle options:
 
-```
+```javascript
 okular.defaultRectangleOptions = {
     combine: okular.defaults.combineRectangles, //shoul this rectangle combine with others
     bitDepth: okular.defaults.bitDepth, //rectangle bit depth
@@ -76,7 +76,7 @@ This is a jQuery function that expects the same options as `okular.add`, but it 
 
 Example:
 
-```
+```javascript
 $('body').tmList(); //this will do a full page 4 bit render
 $('div.navigation').tmList({   //this will do a 1 bit render of all 
     bitDepth: 1                //visible divs with class 'navigation'
