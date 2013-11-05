@@ -58,11 +58,11 @@ Default rectangle options:
 
 ```javascript
 okular.defaultRectangleOptions = {
-    combine: okular.defaults.combineRectangles, //shoul this rectangle combine with others
+    combine: okular.defaults.combineRectangles, //combine rectangle with others
     bitDepth: okular.defaults.bitDepth, //rectangle bit depth
-    A2: false, //should the rectangle use A2 waveform to render 
-    PIP: false, //should the rectangle render in PIP layer
-    inverse: false, //should the rectangle be inverse
+    A2: false, //use A2 waveform to render 
+    PIP: false, //render in PIP layer
+    inverse: false, //inverse render
     dithering: okular.defaults.dithering, //rectangle dithering
     renderDelay: okular.defaults.renderDelay, //time between rectangle commit and actual rendering to device
     top: 0, //rectangle offset from top
