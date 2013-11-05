@@ -3,11 +3,17 @@
     if (typeof window.okular == 'undefined') {
         window.okular = {
             fake: true,
-            KoalaNochange: function() {},
-            Beep: function() {},
-            BeepSoft: -1,
-            BeepHard: -1,
-            SetFrontligh: function() {},
+            KoalaNochange: function() {
+                console.log("FAKE: sending no change.")
+            },
+            Beep: function(beep_type) {
+                console.log("FAKE: " + beep_type==okular.BeepSoft ? "soft" : "hard" + " beep.");
+            },
+            BeepSoft: 1,
+            BeepHard: 2,
+            SetFrontligh: function(brightness) {
+                console.log("FAKE: setting front light to " + brightness);
+            },
             nm_host: undefined,
             device_uuid: undefined,
             RSSI: -1,
@@ -278,12 +284,14 @@
     }
 
     $('body').click(function() {
-        okular.noChangeTimer = setTimeout(function() {
-            if (okular.rectangles.length == 0) {
-                okular.KoalaNochange();
-            }
-            okular.noChangeTimer = null;
-        }, okular.settings.timeoutClick);
+        if (okular.settings.timeoutClick > 0) {
+            okular.noChangeTimer = setTimeout(function() {
+                if (okular.rectangles.length == 0) {
+                    okular.KoalaNochange();
+                }
+                okular.noChangeTimer = null;
+            }, okular.settings.timeoutClick);
+        }
     });
 
     //backward compatibility
