@@ -9,13 +9,11 @@ buster.testCase("TM test case", {
             okular.KoalaRender = this.stub();
             okular.KoalaInverseNextRender = this.stub();
             okular.KoalaUseA2Waveform = this.stub();
-            okular.KoalaUsePIPLayerOnce = this.stub();
         } else {
             this.spy(okular, 'KoalaRenderRectangles');
             this.spy(okular, 'KoalaRender');
             this.spy(okular, 'KoalaInverseNextRender');
             this.spy(okular, 'KoalaUseA2Waveform');
-            this.spy(okular, 'KoalaUsePIPLayerOnce');
         }
         okular.init();
         this.clock = buster.sinon.useFakeTimers();
@@ -111,12 +109,11 @@ buster.testCase("TM test case", {
             height: 100,
             bitDepth: 1,
             A2: true,
-            PIP: true,
             inverse: true
         });
 
         this.clock.tick(okular.defaults.timeout1bit);
-        assert.equals(okular.KoalaRenderRectangles.getCall(3).args[1], [0, 0, 100, 100, 0x71, okular.defaults.dithering]);
+        assert.equals(okular.KoalaRenderRectangles.getCall(3).args[1], [0, 0, 100, 100, 0x51, okular.defaults.dithering]);
     },
     "basic tmList with old rectangle format": function() {
         okular.init({
@@ -188,7 +185,6 @@ buster.testCase("TM test case", {
             height: 100,
             bitDepth: 1,
             A2: true,
-            PIP: true,
             inverse: true
         });
 

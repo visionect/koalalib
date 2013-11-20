@@ -1,7 +1,7 @@
 trackmanipulation [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=master)](https://travis-ci.org/visionect/koalalib)
 =========================================================================================================================================
 
-Trackmanipulation is a jQuery plugin and improvement to Koala Okular javascript extensions. It is intended to ease the development of applications for Visionec E Ink tablets.
+Trackmanipulation is a jQuery plugin and improvement to Koala Okular javascript extensions. It is intended to ease the development of applications for Visionect E Ink tablets.
 
 Usage
 -----
@@ -21,8 +21,8 @@ Default settings:
 
 ```javascript
 okular.defaults = {
-    width: 600, //width of device
-    height: 800, //height of device
+    width: 600, //width of device for debug display
+    height: 800, //height of device for debug display
     debug: true, //enable debug display and console output
     debugOffset: 10, //offset of debug display from main display (in px)
     position: 'right', //position of debug display ('right' or 'bottom')
@@ -41,7 +41,7 @@ okular.defaults = {
 
 You can override any of the above options, but it is strongly recommended that you don't change timeout values unless you know exactly what you are doing.
 
-Example init call for horizontal display:
+Example init call for horizontal debug display:
 
 ```javascript
 okular.init({
@@ -60,8 +60,7 @@ Default rectangle options:
 okular.defaultRectangleOptions = {
     combine: okular.defaults.combineRectangles, //combine rectangle with others
     bitDepth: okular.defaults.bitDepth, //rectangle bit depth
-    A2: false, //use A2 waveform to render 
-    PIP: false, //render in PIP layer
+    A2: false, //use A2 waveform to render
     inverse: false, //inverse render
     dithering: okular.defaults.dithering, //rectangle dithering
     renderDelay: okular.defaults.renderDelay, //time between rectangle commit and actual rendering to device
@@ -82,3 +81,12 @@ $('div.navigation').tmList({   //this will do a 1 bit render of all
     bitDepth: 1                //visible divs with class 'navigation'
 });
 ```
+
+Caution
+-------
+
+When you use rectange combining or old rectangle format there will be some things you need to look for:
+* Rectangles will use the highest bit depth in queue
+* Rectangles will use use the highest dithering in queue (highest from list [default, none, Bayer, FloydSteinberg])
+* If at least one rectangle in queue is using A2 rendering all others will use it too
+* If at least one rectangle in queue is using inverse rendering all others will use it too

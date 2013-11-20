@@ -74,7 +74,6 @@
                 } else {
                     same = same[0];
                     same.A2 |= rectangle.A2;
-                    same.PIP |= rectangle.PIP;
                     same.inverse |= rectangle.inverse;
                     same.bitDepth = Math.max(rectangle.bitDepth, same.bitDepth);
                     same.dithering = Math.max(rectangle.inverse, same.dithering);
@@ -91,8 +90,8 @@
                 nextCallTimeout = this.settings.timeoutFirst,
                 bitDepth = 1,
                 A2 = false,
-                PIP = false,
                 inverse = false,
+                dithering = 0,
                 self = this;
 
             if (this.settings.debug) {
@@ -118,7 +117,6 @@
                     rectangle.bottom = Math.max(rectangle.bottom, this.top+this.height);
 
                     rectangle.A2 |= this.A2;
-                    rectangle.PIP |= this.PIP;
                     rectangle.inverse |= this.inverse;
                     rectangle.bitDepth = Math.max(rectangle.bitDepth, this.bitDepth);
                     rectangle.dithering = Math.max(rectangle.dithering, this.dithering);
@@ -155,13 +153,13 @@
                 koalaRectangles.push(rectangle.height);
 
                 if (self.settings.newRectangleFormat) {
-                    koalaRectangles.push(rectangle.inverse << 6 | rectangle.PIP << 5 | rectangle.A2 << 4 | rectangle.bitDepth);
+                    koalaRectangles.push(rectangle.inverse << 6 | rectangle.A2 << 4 | rectangle.bitDepth);
                     koalaRectangles.push(rectangle.dithering);
                 } else {
                     A2 |= rectangle.A2;
-                    PIP |= rectangle.PIP;
                     inverse |= rectangle.inverse;
                     bitDepth = Math.max(bitDepth, rectangle.bitDepth);
+                    dithering = Math.max(dithering, rectangle.dithering);
                 }
 
                 if (self.settings.debug) {
@@ -181,23 +179,43 @@
 
             
             if (this.settings.debug && koalaRectangles.length > 0) {
-                console.log("Sending " + koalaRectangles.length/(self.settings.newRectangleFormat ? 6 : 4) + " changes to koala: [" + koalaRectangles.join(', ') + "]");
+                //console.log("Sending " + koalaRectangles.length/(self.settings.newRectangleFormat ? 6 : 4) + " changes to koala: [" + koalaRectangles.join(', ') + "]");
             }
 
             if('KoalaRenderRectangles' in okular && koalaRectangles.length > 0) {
                 if (this.settings.newRectangleFormat) {
                     okular.KoalaRenderRectangles(koalaRectangles.length, koalaRectangles);
+                    if (this.settings.debug) {
+                        var message = "Sending " + koalaRectangles.length/6 + " changes to koala. [";
+                        $.each(koalaRectangles, function(i) {
+                            value = this;
+                            if (i%6 == 4) {
+                                message += "0x" + value.toString(16) + " (Bit depth: " + (value & 0xf) + ", A2: " + ((value & 0x10) == 0x10) + ", Inverse: " + ((value & 0x40) == 0x40) + "), ";
+                            } else if (i%6 == 5) {
+                                message += value + " (Dithering: " + self.getDitheringName(value) + ")" + (koalaRectangles.length-1 == i ? "]" : "; ");
+                            } else {
+                                message += value + ", ";
+                            }
+                        });
+                        console.log(message);
+                    }
                 } else {
                     if (A2) {
                         okular.KoalaUseA2Waveform();
                     }
-                    if (PIP) {
-                        okular.KoalaUsePIPLayerOnce();
-                    }
                     if (inverse) {
                        okular.KoalaInverseNextRender();
                     }
-                    okular.KoalaRender(koalaRectangles.length, koalaRectangles, bitDepth);
+                    okular.KoalaRender(koalaRectangles.length, koalaRectangles, bitDepth, dithering);
+                    if (this.settings.debug) {
+                        var message = "Sending " + koalaRectangles.length/4 + " changes to koala.";
+                        message += " Bit depth: " + (bitDepth==true);
+                        message += ", A2: " + (A2==true);
+                        message += ", Inverse: " + (inverse==true);
+                        message += ", Dithering: " + this.getDitheringName(dithering);
+                        message += ", Rectangles: [" + koalaRectangles.join(', ') + "]";
+                        console.log(message);
+                    }
                 }
             }
 
@@ -220,6 +238,17 @@
                 clearTimeout(okular.noChangeTimer);
                 okular.noChangeTimer = null;
             }
+        },
+
+        getDitheringName: function(value) {
+            for(var prop in okular.dithering) {
+                if(okular.dithering.hasOwnProperty(prop)) {
+                    if(okular.dithering[prop] == value) {
+                        return prop;
+                    }
+                }
+            }
+            return 'ERROR: invalid!';
         }
     });
 
@@ -253,7 +282,6 @@
         combine: okular.defaults.combineRectangles,
         bitDepth: okular.defaults.bitDepth,
         A2: false,
-        PIP: false,
         inverse: false,
         dithering: okular.defaults.dithering,
         renderDelay: okular.defaults.renderDelay,
