@@ -14,6 +14,10 @@
             SetFrontligh: function(brightness) {
                 console.log("FAKE: setting front light to " + brightness);
             },
+            KoalaRenderRectangles: function() {},
+            KoalaRender: function() {},
+            KoalaUseA2Waveform: function() {},
+            KoalaInverseNextRender: function() {},
             nm_host: undefined,
             device_uuid: undefined,
             RSSI: -1,
@@ -88,7 +92,7 @@
             var koalaRectangles = [],
                 now = new Date(),
                 nextCallTimeout = this.settings.timeoutFirst,
-                bitDepth = 1,
+                bitDepth = -1,
                 A2 = false,
                 inverse = false,
                 dithering = 0,
@@ -108,7 +112,7 @@
 
             // rectangles can be combined
             if (combinable.length > 0) {
-                var rectangle = $.extend({}, this.defaultRectangleOptions, {right: 0, bottom: 0, left: 10000, top: 10000, bitDepth: 1});
+                var rectangle = $.extend({}, this.defaultRectangleOptions, {right: 0, bottom: 0, left: 10000, top: 10000, bitDepth: -1});
                 $.each(combinable, function(index) {
                     rectangle.left = Math.min(rectangle.left, this.left);
                     rectangle.top = Math.min(rectangle.top, this.top);
@@ -177,12 +181,7 @@
                 self.rectangles.splice(self.rectangles.indexOf(rectangle), 1);
             });
 
-            
-            if (this.settings.debug && koalaRectangles.length > 0) {
-                //console.log("Sending " + koalaRectangles.length/(self.settings.newRectangleFormat ? 6 : 4) + " changes to koala: [" + koalaRectangles.join(', ') + "]");
-            }
-
-            if('KoalaRenderRectangles' in okular && koalaRectangles.length > 0) {
+            if(koalaRectangles.length > 0) {
                 if (this.settings.newRectangleFormat) {
                     okular.KoalaRenderRectangles(koalaRectangles.length, koalaRectangles);
                     if (this.settings.debug) {
@@ -209,7 +208,7 @@
                     okular.KoalaRender(koalaRectangles.length, koalaRectangles, bitDepth, dithering);
                     if (this.settings.debug) {
                         var message = "Sending " + koalaRectangles.length/4 + " changes to koala.";
-                        message += " Bit depth: " + (bitDepth==true);
+                        message += " Bit depth: " + bitDepth;
                         message += ", A2: " + (A2==true);
                         message += ", Inverse: " + (inverse==true);
                         message += ", Dithering: " + this.getDitheringName(dithering);
@@ -351,6 +350,8 @@
         console.log("$.tmListBD is DEPRECATED, use tmList instead.");
     }
 
-    okular.init();
+    $(document).ready(function() {
+        okular.init();
+    });
  
 })(jQuery, window, document);
