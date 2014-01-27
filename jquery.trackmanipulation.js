@@ -1,3 +1,14 @@
+/*!
+ * Koala trackmanipulation jQuery Plugin v3.10.0
+ * https://github.com/visionect/koalalib
+ *
+ * Copyright 2014 Visionect d.o.o.
+ * Released under the MIT license
+ *
+ * Date: 2014-01-27T11:18Z
+ */
+
+
 (function($, window, document) {
 
     if (typeof window.okular == 'undefined') {
@@ -351,7 +362,9 @@
     }
 
     $(document).ready(function() {
-        okular.init();
+        if (!okular.settings) {
+            okular.init();
+        }
     });
  
 })(jQuery, window, document);
