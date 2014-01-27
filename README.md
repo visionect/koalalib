@@ -1,4 +1,4 @@
-trackmanipulation [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=master)](https://travis-ci.org/visionect/koalalib)
+trackmanipulation [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=master)](https://travis-ci.org/visionect/koalalib) [![Coverage Status](https://coveralls.io/repos/visionect/koalalib/badge.png)](https://coveralls.io/r/visionect/koalalib)
 =========================================================================================================================================
 
 Trackmanipulation is a jQuery plugin and improvement to Koala Okular javascript extensions. It is intended to ease the development of applications for Visionect E Ink tablets.
