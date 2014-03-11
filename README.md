@@ -5,7 +5,7 @@ Trackmanipulation is a jQuery plugin and improvement to Koala Okular javascript 
 
 Usage
 -----
-Include jQuery and jquery.trackmanipulation-3.10.js at the bottom of your HTML file, right befeor the end of `body` tag. And then you can use `okular.add(options)` and `$.fn.tmList(options)` in your code.
+Include jQuery and jquery.trackmanipulation.js at the bottom of your HTML file, right before the end of `body` tag. And then you can use `okular.add(options)` and `$.fn.tmList(options)` in your code.
 
 ```html
 <script src="lib/jquery-2.0.3.js"></script>
