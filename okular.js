@@ -74,41 +74,6 @@
         }
     }
 
-    okular.add = function(options) {
-        var rectangle = extend({}, this.defaultRectangleOptions, {combine: this.settings.combineRectangles}, options);
-        if ('width' in rectangle && 'height' in rectangle) {
-
-            var same = this.rectangles.filter(function(e) {
-                return  e.width == rectangle.width &&
-                        e.height == rectangle.height &&
-                        e.top == rectangle.top &&
-                        e.left == rectangle.left;
-            });
-
-            if (same.length == 0) {
-                rectangle.timestamp = new Date();
-                this.rectangles.push(rectangle);
-
-                if (this.rectangles.length == 1) {
-                    var timeout = this.nextUpdate ? this.nextUpdate - (new Date()) : this.settings.timeoutFirst;
-                    if (timeout < this.settings.timeoutFirst ) {
-                        timeout = this.settings.timeoutFirst;
-                    }
-                    window.setTimeout(okular.sendToKoala.bind(this), timeout);
-                }
-            } else {
-                same = same[0];
-                same.A2 |= rectangle.A2;
-                same.inverse |= rectangle.inverse;
-                same.bitDepth = Math.max(rectangle.bitDepth, same.bitDepth);
-                same.dithering = Math.max(rectangle.inverse, same.dithering);
-                same.renderDelay = Math.min(rectangle.renderDelay, same.renderDelay);
-            }
-        } else {
-            throw new Error("Rectangle must have width and height properties!");
-        }
-    }
-
     okular.sendToKoala = function() {
         var koalaRectangles = [],
             now = new Date(),
@@ -259,6 +224,41 @@
         if (okular.noChangeTimer) {
             clearTimeout(okular.noChangeTimer);
             okular.noChangeTimer = null;
+        }
+    }
+    
+    okular.add = function(options) {
+        var rectangle = extend({}, this.defaultRectangleOptions, {combine: this.settings.combineRectangles}, options);
+        if ('width' in rectangle && 'height' in rectangle) {
+
+            var same = this.rectangles.filter(function(e) {
+                return  e.width == rectangle.width &&
+                        e.height == rectangle.height &&
+                        e.top == rectangle.top &&
+                        e.left == rectangle.left;
+            });
+
+            if (same.length == 0) {
+                rectangle.timestamp = new Date();
+                this.rectangles.push(rectangle);
+
+                if (this.rectangles.length == 1) {
+                    var timeout = this.nextUpdate ? this.nextUpdate - (new Date()) : this.settings.timeoutFirst;
+                    if (timeout < this.settings.timeoutFirst ) {
+                        timeout = this.settings.timeoutFirst;
+                    }
+                    window.setTimeout(okular.sendToKoala.bind(this), timeout);
+                }
+            } else {
+                same = same[0];
+                same.A2 |= rectangle.A2;
+                same.inverse |= rectangle.inverse;
+                same.bitDepth = Math.max(rectangle.bitDepth, same.bitDepth);
+                same.dithering = Math.max(rectangle.inverse, same.dithering);
+                same.renderDelay = Math.min(rectangle.renderDelay, same.renderDelay);
+            }
+        } else {
+            throw new Error("Rectangle must have width and height properties!");
         }
     }
 
