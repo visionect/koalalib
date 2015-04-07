@@ -94,7 +94,7 @@
                     if (timeout < this.settings.timeoutFirst ) {
                         timeout = this.settings.timeoutFirst;
                     }
-                    window.setTimeout(this.sendToKoala.bind(this), timeout);
+                    window.setTimeout(okular.sendToKoala.bind(this), timeout);
                 }
             } else {
                 same = same[0];
@@ -250,7 +250,7 @@
                     nextCallTimeout = min;
                 }
             }
-            setTimeout(this.sendToKoala.bind(this), nextCallTimeout);
+            setTimeout(okular.sendToKoala.bind(this), nextCallTimeout);
         }
 
         this.nextUpdate = new Date();
