@@ -5,7 +5,7 @@ config["TM tests"] = {
     environment: "browser",
     sources: [
         "lib/*.js",
-        "jquery.trackmanipulation.js"
+        "okular.js"
     ],
     tests: [
         "test/*-test.js"

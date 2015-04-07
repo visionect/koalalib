@@ -1,15 +1,14 @@
-trackmanipulation [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=master)](https://travis-ci.org/visionect/koalalib) [![Coverage Status](https://coveralls.io/repos/visionect/koalalib/badge.png)](https://coveralls.io/r/visionect/koalalib)
+trackmanipulation [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=master)](https://travis-ci.org/visionect/koalalib)
 =========================================================================================================================================
 
-Trackmanipulation is a jQuery plugin and improvement to Visionect Server JavaScript extensions. It is intended to ease the development of applications for Visionect E Paper tablets (V-Tablets). Find out more at: http://www.visionect.si/
+Trackmanipulation is improvment for Visionect Server JavaScript extensions. It is intended to ease the development of applications for Visionect E Paper tablets (V-Tablets). Find out more at: http://www.visionect.si/
 
 Usage
 -----
-Include jQuery and jquery.trackmanipulation.js at the bottom of your HTML file, right before the end of `body` tag. And then you can use `okular.add(options)` and `$.fn.tmList(options)` in your code.
+Include okular.js and optionaly jQuery at the bottom of your HTML file, right before the end of `body` tag. And then you can use `okular.add(options)` and `$.fn.tmList(options)` in your code.
 
 ```html
-<script src="lib/jquery-2.0.3.js"></script>
-<script src="jquery.trackmanipulation-3.10.js"></script>
+<script src="okular.js"></script>
 ```
 
 
@@ -17,7 +16,7 @@ Include jQuery and jquery.trackmanipulation.js at the bottom of your HTML file, 
 ----------------------
 Call this function on page load with options object to override the default settings. If you don't call it, default settings will be used.
 
-Default settings: 
+Default settings:
 
 ```javascript
 okular.defaults = {
@@ -69,6 +68,19 @@ okular.defaultRectangleOptions = {
 };
 ```
 
+`okular.addNodes(node<s>, options)`
+----------------------
+Expects the same options as `okular.add`, but it will calculate offset and size of required rectangle from the DOM node(s).
+
+Example:
+
+```javascript
+okular.addNodes(document.body);                                   //this will do a full page 4 bit render
+okular.addNodes(document.getElementsByClassName('navigation'), {  //this will do a 1 bit render of all
+    bitDepth: 1                                                   //visible elements with class 'navigation'
+});
+```
+
 `$.fn.tmList(options)`
 ----------------------
 This is a jQuery function that expects the same options as `okular.add`, but it will calculate offset and size of required rectangle from the jQuery object.
@@ -77,7 +89,7 @@ Example:
 
 ```javascript
 $('body').tmList(); //this will do a full page 4 bit render
-$('div.navigation').tmList({   //this will do a 1 bit render of all 
+$('div.navigation').tmList({   //this will do a 1 bit render of all
     bitDepth: 1                //visible divs with class 'navigation'
 });
 ```

@@ -23,10 +23,11 @@ buster.testCase("TM test case", {
     },
     "debug display init": function () {
         okular.init({debug: false});
-        overlay = $('#tmOverlay');
+        var overlay = $('#tmOverlay');
         assert.equals(overlay.length, 0);
 
         okular.init({debug: true});
+        overlay = $('#tmOverlay');
         assert.equals(overlay.length, 1);
         assert.equals(overlay.height(), okular.defaults.height-4);
         assert.equals(overlay.width(), okular.defaults.width-4);
@@ -34,6 +35,7 @@ buster.testCase("TM test case", {
         assert.equals(parseInt(overlay.css('top'), 10), 0);
 
         okular.init({position: 'bottom', debug: true});
+        overlay = $('#tmOverlay');
         assert.equals(parseInt(overlay.css('left'), 10), 0);
         assert.equals(parseInt(overlay.css('top'), 10), okular.defaults.height+okular.defaults.debugOffset);
     },
