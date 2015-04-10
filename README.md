@@ -1,7 +1,7 @@
 koalalib [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=master)](https://travis-ci.org/visionect/koalalib)
 =========================================================================================================================================
 
-Koalalib is improvment for Visionect Server JavaScript extensions. It is intended to ease the development of applications for Visionect E Paper tablets (V-Tablets). Find out more at: http://www.visionect.com/
+Koalalib is an improvment for Visionect Server JavaScript extensions. It is intended to ease the development of applications for Visionect E Paper tablets (V-Tablets). Find out more at: http://www.visionect.com/
 
 Usage
 -----
