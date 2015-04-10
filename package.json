@@ -1,7 +1,7 @@
 {
     "author" : "Visionect",
     "name" : "okular",
-    "description" : "Javascript library that eases using Visionect Server.",
+    "description" : "Javascript library that makes using the Visionect Server simpler.",
     "version" : "3.11.0",
     "scripts" : {
         "test" : "node_modules/.bin/buster-test"
