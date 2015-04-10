@@ -1,16 +1,17 @@
-trackmanipulation [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=master)](https://travis-ci.org/visionect/koalalib)
+koalalib [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=master)](https://travis-ci.org/visionect/koalalib)
 =========================================================================================================================================
 
-Trackmanipulation is improvment for Visionect Server JavaScript extensions. It is intended to ease the development of applications for Visionect E Paper tablets (V-Tablets). Find out more at: http://www.visionect.si/
+Koalalib is improvment for Visionect Server JavaScript extensions. It is intended to ease the development of applications for Visionect E Paper tablets (V-Tablets). Find out more at: http://www.visionect.com/
 
 Usage
 -----
-Include okular.js and optionaly jQuery at the bottom of your HTML file, right before the end of `body` tag. And then you can use `okular.add(options)` and `$.fn.tmList(options)` in your code.
+Include okular.js and optionaly jQuery at the bottom of your HTML file, right before the end of `body` tag.
 
 ```html
 <script src="okular.js"></script>
 ```
 
+jQuery is an optional dependency. If it is included on the site, you can use `$('selector').tmList(options)`. If you don't want jQuery in your app, you can use `okular.addNodes(domNodes, options)`.
 
 `okular.init(options)`
 ----------------------
