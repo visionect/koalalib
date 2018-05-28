@@ -29,7 +29,7 @@
             },
             BeepSoft: 1,
             BeepHard: 2,
-            SetFrontligh: function(brightness) {
+            SetFrontlight: function(brightness) {
                 console.log("FAKE: setting front light to " + brightness);
             },
             KoalaRenderRectangles: function() {},
