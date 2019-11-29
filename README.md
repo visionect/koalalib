@@ -2,7 +2,7 @@ koalalib [![Build Status](https://travis-ci.org/visionect/koalalib.png?branch=ma
 =========================================================================================================================================
 
 
-# THIS PROJECT IS UNMAITAINED, PLEASE USE THE OFFICIAL API, DOCUMENTED AT https://api.visionect.com
+# THIS PROJECT IS UNMAITAINED, PLEASE USE THE OFFICIAL API, DOCUMENTED AT https://docs.visionect.com
 
 Koalalib is an improvment for Visionect Server JavaScript extensions. It is intended to ease the development of applications for Visionect E Paper tablets (V-Tablets). Find out more at: http://www.visionect.com/
 
